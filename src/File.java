@@ -8,7 +8,7 @@ public class File {
 	private boolean writable;
 	private int size;
 	private final Date creationDate;
-	
+	private Date modificationDate;
 	
 	public File(String name, int size, boolean writable){
 		assert isValidName(name);
@@ -40,11 +40,29 @@ public class File {
 	private void setSize(int size){
 		assert isValidSize(size);
 		this.size = size;
+		updateModificationTime();
 	}
 	
 	public void setName(String name){
 		assert isValidName(name);
 		this.name = name;
+		updateModificationTime();
+	}
+	
+	private void updateModificationTime(){
+		modificationDate = new Date();
+	}
+	
+	public Date getCreationDate(){
+		return creationDate;
+	}
+	
+	public Date getModificationDate(){
+		if (modificationDate != null){
+			return modificationDate;
+		} else {
+			return getCreationDate();
+		}
 	}
 	
 	private boolean isValidName(String name){
