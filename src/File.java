@@ -70,4 +70,15 @@ public class File {
 		Pattern valid = Pattern.compile("[a-zA-Z]");
 		return valid.matcher(name).matches();
 	}
+	
+	// (StartA <= EndB) and (EndA >= StartB)
+	public boolean hasOverlappingUsePeriod(File other){
+		if (getModificationDate() == getCreationDate() || other.getModificationDate() == other.getCreationDate()){
+			return false;
+		}
+		else if (getCreationDate().getTime() <= other.getModificationDate().getTime() && getModificationDate().getTime() <= other.getCreationDate().getTime() ){
+			return true;
+		}
+		return false;
+	}
 }
