@@ -1,26 +1,56 @@
-//@author jemoeder
+//@author 
 import java.util.regex.*;
 import be.kuleuven.cs.som.annotate.*;
 import java.util.Date;
 
+/**
+ * Deze klasse stelt bestanden voor. De naam, grootte,
+ * 			 aanmaakdatum, en schrijfbaarheid worden bijgehouden.
+ * 
+ * @version	1.0
+ * @author Elias en Robbe
+ *
+ */
+
+
+
 public class File {
+	
+	
 	private String name;
 	private boolean writable;
 	private int size;
 	private final Date creationDate;
 	private Date modificationDate;
 	
+	/**
+	 * Maakt een nieuw bestand aan met gegeven naam, grootte en schrijfbaarheid
+	 * @param name
+	 * 		  de te geven naam
+	 * @param size
+	 * 		  de grootte van het bestand
+	 * @param writable
+	 * 		  true als het bestand beschrijfbaar is 
+	 * 
+	 * 
+	 */
+	
 	public File(String name, int size, boolean writable){
 		assert isValidName(name);
 		setName(name);
 		assert isValidSize(size);
+		setSize(size);
 		creationDate = new Date();
+		modificationDate = creationDate; // dit zorgt ervoor dat modificationDate gelijk is aan creationDate bij aanmaak bestand
 	}
 	
 	public File(String name){
 		this(name, 0, true);
 	}
-	
+	/**
+	 * geeft de grootte van het bestand terug
+	 */
+	@Basic
 	public int getSize(){
 		return size;
 	}
@@ -37,26 +67,35 @@ public class File {
 		setSize(getSize() - amount);
 	}
 	
+	
 	private void setSize(int size){
 		assert isValidSize(size);
 		this.size = size;
-		updateModificationTime();
+		updateModificationTime(); // probleem want dit gaat niet hetzelfde zijn als creation date in het begin // opgelost
 	}
 	
 	public void setName(String name){
 		assert isValidName(name);
 		this.name = name;
-		updateModificationTime();
+		updateModificationTime(); // probleem want dit gaat niet hetzelfde zijn als creation date in het begin // opgelost
 	}
 	
 	private void updateModificationTime(){
 		modificationDate = new Date();
 	}
-	
+	/**
+	 * geeft de aanmaakdatum terug
+	 */
+	@Basic
+	@Immutable
 	public Date getCreationDate(){
 		return creationDate;
 	}
-	
+	/**
+	 * geeft de modificatieDatum terug
+	 * @post als de het bestand nog nooit aangepast is geeft het de aanmaakdatum terug
+	 */
+	@Basic
 	public Date getModificationDate(){
 		if (modificationDate != null){
 			return modificationDate;
@@ -73,7 +112,10 @@ public class File {
 	
 	// (StartA <= EndB) and (EndA >= StartB)
 	public boolean hasOverlappingUsePeriod(File other){
-		if (getModificationDate() == getCreationDate() || other.getModificationDate() == other.getCreationDate()){
+		if (other == null){
+			return false;
+		}
+		else if (getModificationDate() == getCreationDate() || other.getModificationDate() == other.getCreationDate()){
 			return false;
 		}
 		else if (getCreationDate().getTime() <= other.getModificationDate().getTime() && getModificationDate().getTime() <= other.getCreationDate().getTime() ){
@@ -82,10 +124,15 @@ public class File {
 		return false;
 	}
 	
+	
 	public void setWritability(boolean writable){
 		this.writable = writable;
 	}
 	
+	/**
+	 * geeft de schrijfbaarheid terug
+	 */
+	@Basic
 	public boolean getWritability(){
 		return this.writable;
 	}
