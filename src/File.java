@@ -9,11 +9,12 @@ public class File {
 	private int size;
 	private final Date creationDate;
 	
-	public File(String name, int size, boolean writable, Date creationDate){
+	
+	public File(String name, int size, boolean writable){
 		assert isValidName(name);
 		setName(name);
 		assert isValidSize(size);
-		this.creationDate = creationDate;
+		creationDate = new Date();
 	}
 	
 	public File(String name){
