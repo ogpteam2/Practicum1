@@ -1,5 +1,6 @@
 //@author jemoeder
 import java.util.regex.*;
+import be.kuleuven.cs.som.annotate.*;
 
 public class File {
 	private String name;
