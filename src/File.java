@@ -1,4 +1,3 @@
-//@author 
 import java.util.regex.*;
 import be.kuleuven.cs.som.annotate.*;
 import java.util.Date;
@@ -6,6 +5,8 @@ import java.util.Date;
 /**
  * Deze klasse stelt bestanden voor. De naam, grootte,
  * 			 aanmaakdatum, en schrijfbaarheid worden bijgehouden.
+ * @invar de grootte van het bestand moet geldig zijn 
+ * 		  isValidSize(getSize())
  * 
  * @version	1.0
  * @author Elias en Robbe
@@ -36,7 +37,7 @@ public class File {
 	 */
 	
 	public File(String name, int size, boolean writable){
-		assert isValidName(name);
+		assert isValidName(name); // moet totaal gebeuren niet nominaal
 		setName(name);
 		assert isValidSize(size);
 		setSize(size);
