@@ -81,4 +81,13 @@ public class File {
 		}
 		return false;
 	}
+	
+	public void setWritability(boolean writable){
+		this.writable = writable;
+	}
+	
+	public boolean getWritability(){
+		return this.writable;
+	}
+	
 }
