@@ -7,13 +7,13 @@ public class File {
 	private String name;
 	private boolean writable;
 	private int size;
-	private Date creationDate;
+	private final Date creationDate;
 	
-	public File(String name, int size, boolean writable){
+	public File(String name, int size, boolean writable, Date creationDate){
 		assert isValidName(name);
 		setName(name);
 		assert isValidSize(size);
-		
+		this.creationDate = creationDate;
 	}
 	
 	public File(String name){
