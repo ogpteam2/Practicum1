@@ -39,13 +39,15 @@ public class File {
 	 */
 	
 	public File(String name, int size, boolean writable){
-		if (isValidName(name) == false){ setName("New Text Document.txt"); }
-		else { setName(name); }
+		// maakt het bestand initieel schrijfbaar voor de constructor
+		setWritability(true);
+		setName(name);
 		assert isValidSize(size);
 		setSize(size);
-		this.writable = writable;
 		creationDate = new Date();
 		modificationDate = creationDate; // dit zorgt ervoor dat modificationDate gelijk is aan creationDate bij aanmaak bestand
+		// sluit het bestand af wanneer het niet schrijfbaar mag zijn
+		setWritability(writable);
 	}
 	/**
 	 * Maakt een bestand aan met grootte nul en een gegeven naam die beschrijfbaar is.
@@ -64,6 +66,14 @@ public class File {
 	}
 	
 	/**
+	 * geeft de naam van het bestand terug
+	 */
+	@Basic
+	public String getName(){
+		return name;
+	}
+	
+	/**
 	 * Controleert ofdat een grootte geldig is
 	 * @param size
 	 * 		  de te controleren grootte
@@ -71,8 +81,8 @@ public class File {
 	 * 		   false als het geen geldige grootte is
 	 */
 	@Raw
-	private boolean isValidSize(int size){
-		return size >= 0 && size - 1 < Integer.MAX_VALUE;
+	public boolean isValidSize(int size){
+		return size >= 0;
 	}
 	
 	
@@ -82,8 +92,10 @@ public class File {
 	 * 		  de hoeveelheid waarmee de file moet vergroot worden (in bytes)
 	 */
 	public void enlarge(int amount){
+		int newSize = getSize() + amount;
+		assert isValidSize(newSize);
 		try{
-			setSize(getSize() + amount);
+			setSize(newSize);
 		} catch (NotWritableException exc) {
 			throw exc;
 		}
@@ -95,8 +107,10 @@ public class File {
 	 * 		  de hoeveelheid waarmee de file moet verkleind worden (in bytes)
 	 */
 	public void shorten(int amount){
+		int newSize = getSize() - amount;
+		assert isValidSize(newSize);
 		try{
-			setSize(getSize() - amount);
+			setSize(newSize);
 		} catch (NotWritableException exc) {
 			throw exc;
 		}
@@ -111,10 +125,14 @@ public class File {
 	 * 
 	 */
 	private void setSize(int size) throws NotWritableException{
-		if(getWritability()) throw new NotWritableException();
-		assert isValidSize(size);
-		this.size = size;
-		updateModificationTime(); 
+		if(getWritability()){
+			assert isValidSize(size);
+			this.size = size;
+			updateModificationTime(); 
+		} else {
+			throw new NotWritableException();
+		}
+		
 	}
 	/**
 	 * verandert de naam van het bestand
@@ -124,13 +142,11 @@ public class File {
 	 * 		 de aanpassingsdatum wordt dan ook niet aangepast
 	 */
 	public void setName(String name){
-		if (isValidName(name) == false){ return;}
-		else 
-		{
-			this.name = name;
-			updateModificationTime(); 
+		if (name.length() == 0){
+			this.name = "file.txt";
+		} else {
+			this.name = name.replace(' ', '_').replaceAll("[^a-zA-Z0-9.\\-_]", "");
 		}
-		
 	}
 	
 	/**
@@ -161,19 +177,7 @@ public class File {
 			return getCreationDate();
 		}
 	}
-	/**
-	 * 
-	 * controleert de geldigheid van de naam
-	 * @param name
-	 * 		  de te controleren naam
-	 * @return true als het een geldige naam is
-	 *         false als het geen geldige naam is
-	 */
-	private boolean isValidName(String name){
-		if(name.length()==0) return false;
-		Pattern valid = Pattern.compile("[a-zA-Z]");
-		return valid.matcher(name).matches();
-	}
+	
 	/**
 	 * de gebruiksperiode is het tijdsinterval tussen het
 	 *	  creatietijdstip en het tijdstip van laatste wijziging.
@@ -204,7 +208,7 @@ public class File {
 	 * @param writable
 	 * 		  een boolean die bepaalt ofdat het bestand schrijfbaar is of niet
 	 */
-	public void setWritability(boolean writable){
+	private void setWritability(boolean writable){
 		this.writable = writable;
 	}
 	
