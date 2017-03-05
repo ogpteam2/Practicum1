@@ -6,6 +6,7 @@ import org.junit.Test;
 
 public class FileTests {
 	@BeforeClass public static void setUpBeforeClass() throws Exception {
+		
 	}
 	
 	
