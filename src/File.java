@@ -154,6 +154,7 @@ public class File {
 		}
 	}
 	/**
+	 * 
 	 * controleert de geldigheid van de naam
 	 * @param name
 	 * 		  de te controleren naam
