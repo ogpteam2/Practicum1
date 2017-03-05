@@ -152,7 +152,13 @@ public class File {
 			return getCreationDate();
 		}
 	}
-	
+	/**
+	 * controleert de geldigheid van de naam
+	 * @param name
+	 * 		  de te controleren naam
+	 * @return true als het een geldige naam is
+	 *         false als het geen geldige naam is
+	 */
 	private boolean isValidName(String name){
 		if(name.length()==0) return false;
 		Pattern valid = Pattern.compile("[a-zA-Z]");
