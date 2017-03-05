@@ -82,7 +82,11 @@ public class File {
 	 * 		  de hoeveelheid waarmee de file moet vergroot worden (in bytes)
 	 */
 	public void enlarge(int amount){
-		setSize(getSize() + amount);
+		try{
+			setSize(getSize() + amount);
+		} catch (NotWritableException exc) {
+			throw exc;
+		}
 	}
 	/**
 	 * @pre de hoeveelheid mag niet groter zijn dan de grootte van het bestand
@@ -91,8 +95,11 @@ public class File {
 	 * 		  de hoeveelheid waarmee de file moet verkleind worden (in bytes)
 	 */
 	public void shorten(int amount){
-		assert isValidSize(getSize() - amount);
-		setSize(getSize() - amount);
+		try{
+			setSize(getSize() - amount);
+		} catch (NotWritableException exc) {
+			throw exc;
+		}
 	}
 	
 	/**
@@ -103,7 +110,8 @@ public class File {
 	 * 		  de gewenste grootte van het bestand
 	 * 
 	 */
-	private void setSize(int size){
+	private void setSize(int size) throws NotWritableException{
+		if(getWritability()) throw new NotWritableException();
 		assert isValidSize(size);
 		this.size = size;
 		updateModificationTime(); 
